@@ -1,67 +1,37 @@
-import { useState } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import routes from "./routes";
 import Header from "./Header";
-import Tabs from "./Tabs";
-import Timeline from "./Timeline";
-import List from "./List";
 
 function App() {
-  const data = [
-    {
-      date: "20230522",
-      status: 0,
-      tasks: [],
-    },
-    {
-      date: "20230523",
-      status: 0,
-      tasks: [],
-    },
-    {
-      date: "20230524",
-      status: 0,
-      tasks: [
-        { name: "New Sahla Update", status: -1 },
-        { name: "Top Selling Item", status: 0 },
-        { name: "Change Display", status: 2 },
-      ],
-    },
-    {
-      date: "20230525",
-      status: 0,
-      tasks: [
-        { name: "New Sahla Update", status: -1 },
-        { name: "Top Selling Item", status: 0 },
-      ],
-    },
-    {
-      date: "20230526",
-      status: 0,
-      tasks: [
-        { name: "New Sahla Update", status: -1 },
-        { name: "Top Selling Item", status: 0 },
-      ],
-    },
-    {
-      date: "20230527",
-      status: 0,
-      tasks: [],
-    },
-  ];
-
-  const [selectedItem, setSelectedItem] = useState(0);
-
   return (
     <div>
+      <Router>
       <Header />
-      <Tabs />
-      <Timeline
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
-        data={data}
-      />
-      <List date={data[selectedItem].date} data={data} />
+        <Switch>
+          {routes.map((route, index) => (
+            <AppRoutes
+              key={route.path + index}
+              path={route.path}
+              component={route.component}
+              exact={route.exact}
+            />
+          ))}
+        </Switch>
+      </Router>
     </div>
   );
 }
 
 export default App;
+
+const AppRoutes = ({ component: Component, path, ...rest }) => {
+  return (
+    <Route
+      path={path}
+      render={(props) => {
+        return <Component {...props} />;
+      }}
+      {...rest}
+    />
+  );
+};
